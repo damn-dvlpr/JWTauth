@@ -1,5 +1,4 @@
 const express= require("express");
-// const jwt=require("jsonwebtoken");
 var jwt = require('jsonwebtoken');
 const app=express();
 app.get('/',(req,res)=>{
@@ -14,14 +13,21 @@ app.post('/login',(req,res)=>{
         name:"naimish",
         email:"naimishrastogi12@gmail.com"
     }
-    jwt.sign({user:user},"coxefgu",(err,token)=>{
-        res.json({token:token});
+    jwt.sign({user:user},"encrypt",(err,token)=>{
+        if(err){
+            res.send("Token generation unsuccessfull");
+        }
+        else{
+            res.json({token:token});
+        }
     })
 });
 function verifyToken(req,res,next){
-    const bearerHeader=req.headers["connection"];
+    const bearerHeader=req.headers["authorization"];
     if(typeof bearerHeader !== "undefined"){
-        res.send("kuch nahi hoga");
+        bearerToken=bearerHeader.split(" ")[1];
+        // res.send(bearerToken);
+        next();
     }
     else{
 
